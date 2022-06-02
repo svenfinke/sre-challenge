@@ -1,3 +1,11 @@
 #!/bin/bash
 
-# this is your part to fill
+# Deploy invoice-app
+cd invoice-app
+kubectl apply -f deployment.yaml
+cd ..
+
+# Deploy payment-provider
+cd payment-provider
+kubectl apply -f deployment.yaml
+cd ..
