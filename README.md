@@ -32,6 +32,14 @@ In this repo, we provide you with:
 2. Create a new branch for you to work with.
 3. Install any local K8s cluster (ex: Minikube) on your machine and document your setup, so we can run your solution.
 
+#### Setup
+
+I am running on macOS with Apple Silicon. Docker Desktop and Minikube are installed on my machine.
+
+1. `minikube start --driver=docker`
+2. `make build`
+3. `make deploy`
+
 ### Part 1 - Fix the issue
 
 The setup we provide has a :bug:. Find it and fix it! You'll know you have fixed it when the state of the pods in the namespace looks similar to this:
@@ -48,7 +56,7 @@ payment-provider-abcdef1234-1ab25   1/1     Ready                        0      
 
 #### Requirements
 
-Write here about the :bug:, the fix, how you found it, and anything else you want to share about it.
+The **bug** was the definition of the pods to run as root, even though that is not allowed by default and should not be done if possible. After removing the securityContext from the deployment files, the pods were starting without further issues. But this might lead to other bugs if the pods have to run as root and this was intentional, I'd get into contact with the developers who worked on this change and check if they need to run as root.
 
 ### Part 2 - Setup the apps
 
