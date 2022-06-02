@@ -16,5 +16,3 @@ spec:
       - name: main
         image: payment-provider:latest
         imagePullPolicy: IfNotPresent
-      securityContext:
-        runAsNonRoot: true

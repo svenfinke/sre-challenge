@@ -16,5 +16,3 @@ spec:
       - name: main
         image: invoice-app:latest
         imagePullPolicy: IfNotPresent
-      securityContext:
-        runAsNonRoot: true
