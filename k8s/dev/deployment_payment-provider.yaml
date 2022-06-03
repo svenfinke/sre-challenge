@@ -16,3 +16,5 @@ spec:
       - name: main
         image: payment-provider:latest
         imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8082

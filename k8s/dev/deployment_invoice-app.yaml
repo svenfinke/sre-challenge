@@ -16,3 +16,5 @@ spec:
       - name: main
         image: invoice-app:latest
         imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8081
