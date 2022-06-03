@@ -1,11 +1,7 @@
 #!/bin/bash
 
-# Deploy invoice-app
-cd invoice-app
-kubectl apply -f deployment.yaml
-cd ..
+cd k8s/dev
 
-# Deploy payment-provider
-cd payment-provider
-kubectl apply -f deployment.yaml
-cd ..
+# Deploy invoice-app
+kubectl apply -f deployment_payment-provider.yaml
+kubectl apply -f deployment_invoice-app.yaml

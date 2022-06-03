@@ -3,6 +3,8 @@
 # Use the minikube docker daemon
 eval $(minikube docker-env)
 
+cd src
+
 # Build invoice-app
 cd invoice-app
 docker build -t invoice-app .
