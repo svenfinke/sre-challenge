@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Use the minikube docker daemon
-eval $(minikube docker-env)
+# I switched to Docker for Desktop due to connectivity issues on the mac, so I don't need this step anymore
+# eval $(minikube docker-env)
 
 cd src
 
