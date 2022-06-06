@@ -56,6 +56,10 @@ payment-provider-abcdef1234-1ab25   1/1     Ready                        0      
 
 #### Requirements
 
+Write here about the 🐛, the fix, how you found it, and anything else you want to share about it.
+
+#### Solution
+
 The **bug** was the definition of the pods to run as root, even though that is not allowed by default and should not be done if possible. After removing the securityContext from the deployment files, the pods were starting without further issues. But this might lead to other bugs if the pods have to run as root and this was intentional, I'd get into contact with the developers who worked on this change and check if they need to run as root.
 
 ### Part 2 - Setup the apps
@@ -70,6 +74,13 @@ We would like these 2 apps, `invoice-app` and `payment-provider`, to run in a K8
 4. Provide a better way to pass the URL in `invoice-app/main.go` - it's hardcoded at the moment
 5. Complete `deploy.sh` in order to automate all the steps needed to have both apps running in a K8s cluster.
 6. Complete `test.sh` in order to perform tests against your solution and get successful results (all the invoices are paid) via `GET invoices`.
+
+#### Solution
+
+I added service definitions for both invoice-app and payment-provider, with invoice being exposed via NodePort and payment-provider being ClusterIP to ensure that one is available from the outside, the other one isn't.
+To follow more best practices I combined the service and deployment files for each application and added additional labels, it would probably be a good idea to add additional common k8s labels in real project.
+After having that in place I thought again about the deployment process and changes that in a few steps so that I'd add a rollout to ensure that new images would be used. Having this rollout I also had to make sure that the deployment will wait until the rollout is finished.
+The test.sh will check for an expected amount of unpaid invoices, pay them and check if they have been paid.
 
 ### Part 3 - Questions
 
