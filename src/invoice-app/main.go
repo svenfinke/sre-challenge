@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"pleo.io/invoice-app/db"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -35,6 +36,7 @@ func getInvoices(c *gin.Context) {
 }
 
 func pay(c *gin.Context) {
+	paymentProviderURL := os.Getenv("payment-provider-url")
 	invoices := dbClient.GetUnpaidInvoices()
 	for _, invoice := range invoices {
 		client := http.Client{}
@@ -45,10 +47,11 @@ func pay(c *gin.Context) {
 		}
 		b, err := json.Marshal(req)
 		data := bytes.NewBuffer(b)
-		_, err = client.Post("http://payment-provider:8082/payments/pay", "application/json", data)
+		_, err = client.Post(paymentProviderURL + "/payments/pay", "application/json", data)
 
 		if err != nil {
 			fmt.Printf("Error %s", err)
+			c.JSON(http.StatusInternalServerError, gin.H{ "Error": err })
 			return
 		}
 
