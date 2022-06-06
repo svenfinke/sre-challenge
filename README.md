@@ -34,11 +34,8 @@ In this repo, we provide you with:
 
 #### Setup
 
-I am running on macOS with Apple Silicon. Docker Desktop and Minikube are installed on my machine.
-
-1. `minikube start --driver=docker`
-2. `make build`
-3. `make deploy`
+I am running on macOS with Apple Silicon. Docker Desktop ~~and Minikube are~~ is installed and also used for my kubernetes cluster on my machine. The solution should work just fine with minikube, but you might have some trouble connecting to the `invoice-app` service.
+When your local kubernetes cluster is up and running, just execute `make deploy` and test your setup with `make test` afterwards.
 
 ### Part 1 - Fix the issue
 
