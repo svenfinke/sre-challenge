@@ -89,8 +89,21 @@ Feel free to express your thoughts and share your experiences with real-world ex
 #### Requirements
 
 1. What would you do to improve this setup and make it "production ready"?
+
+There are a few steps that could be made, depending on the development and deployment workflows. A few things that I'd like to implement:
+- Change the invoice-app Service Type to LoadBalancer instead of exposing a NodePort.
+- Use image version tags instead of *:latest*
+- Use Helm Charts instead of plain kubernetes deployments for more flexibility
+- Extend testing to ensure all buisness cases and known errors are covered
+- Define a CI/CD Pipeline to automate the deployment workflow
+
 2. There are 2 microservices that are maintained by 2 different teams. Each team should have access only to their service inside the cluster. How would you approach this?
+
+I would separate the 2 microservices into different namespaces. Each team will be granted access to their own namespace. This would also separate the applications, so a cross-namespace routing must be defined e.g. with a shared gateway.
+
 3. How would you prevent other services running in the cluster to communicate to `payment-provider`?
+
+When the payment-provider is in its own namespace, communitcation is only possible when explicitly defined. 
 
 ## What matters to us?
 
