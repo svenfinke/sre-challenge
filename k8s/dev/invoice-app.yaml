@@ -10,6 +10,11 @@ spec:
   type: NodePort
   selector:
     app: invoice-app
+  externalTrafficPolicy: Local
+  sessionAffinity: "ClientIP"
+  sessionAffinityConfig:
+    clientIP: 
+      timeoutSeconds: 10
   ports:
     - protocol: TCP
       port: 8081
