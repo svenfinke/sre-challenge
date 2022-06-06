@@ -79,8 +79,11 @@ We would like these 2 apps, `invoice-app` and `payment-provider`, to run in a K8
 
 I added service definitions for both invoice-app and payment-provider, with invoice being exposed via NodePort and payment-provider being ClusterIP to ensure that one is available from the outside, the other one isn't.
 To follow more best practices I combined the service and deployment files for each application and added additional labels, it would probably be a good idea to add additional common k8s labels in real project.
-After having that in place I thought again about the deployment process and changes that in a few steps so that I'd add a rollout to ensure that new images would be used. Having this rollout I also had to make sure that the deployment will wait until the rollout is finished.
+
+After having that in place I thought again about the deployment process again and changed it a little bit. Up to tht point I had a separate build and deploy action, but having them combined allowed me to add a forced rollout and wait for the rollout to finish in that action. Otherwise the test sometimes failed if I ran them too quickly after a deployment.
 The test.sh will check for an expected amount of unpaid invoices, pay them and check if they have been paid.
+
+While checking if the test.sh works, I noticed some weird behaviour. Checking if all invoices are unpaid returned a SUCCESS more than once, even though that should not be the case. And sometimes I fetched unpaid invoices after I just paid them. This was caused due to a missing session affinity ("sticky sessions"). After adding the session affinity, test results were reliable again - even though the first test can succeed multiple times as the data resides inside the pods, so getting routed to a new pod will give me a "fresh" database.
 
 ### Part 3 - Questions
 
@@ -88,20 +91,26 @@ Feel free to express your thoughts and share your experiences with real-world ex
 
 #### Requirements
 
-1. What would you do to improve this setup and make it "production ready"?
+**1. What would you do to improve this setup and make it "production ready"?**
 
-There are a few steps that could be made, depending on the development and deployment workflows. A few things that I'd like to implement:
+Probably the most important change: Move the "db" into a shared persistent data store e.g. a managed DB on AWS (DynamoDB for NoSQL or RDS if relational data is involved).
+
+In addition to fixing the data persistence, there are quite a few other changes that are probably a good idea, but this depends a little bit on the expected development and deployment workflows (How many people are involved? How often should the service be deployed? Will there be additional stages in addition to dev and prod? Do you use feature flags?)
 - Change the invoice-app Service Type to LoadBalancer instead of exposing a NodePort.
 - Use image version tags instead of *:latest*
 - Use Helm Charts instead of plain kubernetes deployments for more flexibility
 - Extend testing to ensure all buisness cases and known errors are covered
 - Define a CI/CD Pipeline to automate the deployment workflow
 
-2. There are 2 microservices that are maintained by 2 different teams. Each team should have access only to their service inside the cluster. How would you approach this?
+
+
+**2. There are 2 microservices that are maintained by 2 different teams. Each team should have access only to their service inside the cluster. How would you approach this?**
 
 I would separate the 2 microservices into different namespaces. Each team will be granted access to their own namespace. This would also separate the applications, so a cross-namespace routing must be defined e.g. with a shared gateway.
 
-3. How would you prevent other services running in the cluster to communicate to `payment-provider`?
+
+
+**3. How would you prevent other services running in the cluster to communicate to `payment-provider`?**
 
 When the payment-provider is in its own namespace, communitcation is only possible when explicitly defined. 
 
