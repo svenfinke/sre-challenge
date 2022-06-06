@@ -1,8 +1,10 @@
-deploy:
-	./deploy.sh
+all: deploy test
 
-build:
-	./build.sh
+deploy:
+	./scripts/deploy.sh
 
 test:
-	./test.sh
+	./scripts/test.sh
+
+delete:
+	./scripts/delete.sh
