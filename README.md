@@ -94,6 +94,8 @@ Probably the most important change: Move the "db" into a shared persistent data 
 
 In addition to fixing the data persistence, there are quite a few other changes that are probably a good idea, but this depends a little bit on the expected development and deployment workflows (How many people are involved? How often should the service be deployed? Will there be additional stages in addition to dev and prod? Do you use feature flags?)
 - Change the invoice-app Service Type to LoadBalancer instead of exposing a NodePort.
+- Add readiness and liveness probes whereever possible
+- Automatically scale the pods up or down depending on the load
 - Use image version tags instead of *:latest*
 - Use Helm Charts instead of plain kubernetes deployments for more flexibility
 - Extend testing to ensure all buisness cases and known errors are covered
